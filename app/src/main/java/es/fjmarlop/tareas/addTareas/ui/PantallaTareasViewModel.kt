@@ -1,11 +1,16 @@
 package es.fjmarlop.tareas.addTareas.ui
 
-import android.util.Log
+import android.app.Application
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import es.fjmarlop.tareas.addTareas.ui.model.TareaModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class PantallaTareasViewModel @Inject constructor() : ViewModel() {
@@ -31,6 +36,17 @@ class PantallaTareasViewModel @Inject constructor() : ViewModel() {
     }
 
     fun onCheckBoxSelected(tareaModel: TareaModel) {
-        TODO("Not yet implemented")
+        val index = _tarea.indexOf(tareaModel)
+        _tarea[index] = _tarea[index].let {
+            it.copy(seleccionado = !it.seleccionado)
+        }
+    }
+
+    fun onItemRemove(tareaModel: TareaModel, context: Context) {
+        val tarea = _tarea.find { it.id == tareaModel.id }
+        _tarea.remove(tarea)
+        viewModelScope.launch {
+            Toast.makeText(context, "Tarea borrada correctamente", Toast.LENGTH_SHORT).show()
+        }
     }
 }

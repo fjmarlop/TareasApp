@@ -2,6 +2,7 @@ package es.fjmarlop.tareas.addTareas.ui
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -34,6 +35,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -69,10 +72,16 @@ fun TareasList(pantallaTareasViewModel: PantallaTareasViewModel) {
 
 @Composable
 fun ItemTarea(tareaModel: TareaModel, pantallaTareasViewModel: PantallaTareasViewModel) {
+    val context = LocalContext.current
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp), elevation = CardDefaults.cardElevation()
+            .padding(16.dp)
+            .pointerInput(Unit) {
+                detectTapGestures(onLongPress = {
+                    pantallaTareasViewModel.onItemRemove(tareaModel, context)
+                })
+            }, elevation = CardDefaults.cardElevation()
     ) {
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             Text(
